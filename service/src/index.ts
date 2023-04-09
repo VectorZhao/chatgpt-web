@@ -6,7 +6,7 @@ import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel, initApi } from './chatgpt'
 import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
-import type { ChatOptions, Config, MailConfig, SiteConfig, UserInfo } from './storage/model'
+import type { ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
 import { Status } from './storage/model'
 import {
   clearChat,
@@ -22,6 +22,7 @@ import {
   getUser,
   getUserById,
   insertChat,
+  insertChatUsage,
   renameChatRoom,
   updateChat,
   updateConfig,
@@ -226,8 +227,31 @@ router.post('/chat', auth, async (req, res) => {
       ? await getChat(roomId, uuid)
       : await insertChat(uuid, prompt, roomId, options as ChatOptions)
     const response = await chatReply(prompt, options)
-    if (response.status === 'Success')
-      await updateChat(message._id, response.data.text, response.data.id)
+    if (response.status === 'Success') {
+      if (regenerate && message.options.messageId) {
+        const previousResponse = message.previousResponse || []
+        previousResponse.push({ response: message.response, options: message.options })
+        await updateChat(message._id as unknown as string,
+          response.data.text,
+          response.data.id,
+          response.data.detail.usage as UsageResponse,
+          previousResponse)
+      }
+      else {
+        await updateChat(message._id as unknown as string,
+          response.data.text,
+          response.data.id,
+          response.data.detail.usage as UsageResponse)
+      }
+
+      if (response.data.usage) {
+        await insertChatUsage(req.headers.userId as string,
+          roomId,
+          message._id,
+          response.data.id,
+          response.data.detail.usage as UsageResponse)
+      }
+    }
     res.send(response)
   }
   catch (error) {
@@ -253,8 +277,31 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       },
       systemMessage,
     })
-    if (result.status === 'Success')
-      await updateChat(message._id, result.data.text, result.data.id)
+    if (result.status === 'Success') {
+      if (regenerate && message.options.messageId) {
+        const previousResponse = message.previousResponse || []
+        previousResponse.push({ response: message.response, options: message.options })
+        await updateChat(message._id as unknown as string,
+          result.data.text,
+          result.data.id,
+          result.data.detail.usage as UsageResponse,
+          previousResponse)
+      }
+      else {
+        await updateChat(message._id as unknown as string,
+          result.data.text,
+          result.data.id,
+          result.data.detail.usage as UsageResponse)
+      }
+
+      if (result.data.detail.usage) {
+        await insertChatUsage(req.headers.userId as string,
+          roomId,
+          message._id,
+          result.data.id,
+          result.data.detail.usage as UsageResponse)
+      }
+    }
   }
   catch (error) {
     res.write(JSON.stringify(error))

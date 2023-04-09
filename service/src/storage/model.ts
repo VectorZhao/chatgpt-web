@@ -46,11 +46,20 @@ export class ChatOptions {
   parentMessageId?: string
   messageId?: string
   conversationId?: string
+  promptTokens?: number
+  completionTokens?: number
+  totalTokens?: number
+  estimated?: boolean
   constructor(parentMessageId?: string, messageId?: string, conversationId?: string) {
     this.parentMessageId = parentMessageId
     this.messageId = messageId
     this.conversationId = conversationId
   }
+}
+
+export class previousResponse {
+  response: string
+  options: ChatOptions
 }
 
 export class ChatInfo {
@@ -62,11 +71,43 @@ export class ChatInfo {
   response?: string
   status: Status = Status.Normal
   options: ChatOptions
+  previousResponse?: previousResponse[]
   constructor(roomId: number, uuid: number, prompt: string, options: ChatOptions) {
     this.roomId = roomId
     this.uuid = uuid
     this.prompt = prompt
     this.options = options
+    this.dateTime = new Date().getTime()
+  }
+}
+
+export class UsageResponse {
+  prompt_tokens: number
+  completion_tokens: number
+  total_tokens: number
+  estimated: boolean
+}
+
+export class ChatUsage {
+  _id: ObjectId
+  userId: string
+  roomId: number
+  chatId: ObjectId
+  messageId: string
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  estimated: boolean
+  dateTime: number
+  constructor(userId: string, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
+    this.userId = userId
+    this.roomId = roomId
+    this.chatId = chatId
+    this.messageId = messageId
+    this.promptTokens = usage.prompt_tokens
+    this.completionTokens = usage.completion_tokens
+    this.totalTokens = usage.total_tokens
+    this.estimated = usage.estimated
     this.dateTime = new Date().getTime()
   }
 }
