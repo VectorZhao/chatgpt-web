@@ -1,4 +1,5 @@
 import type { ObjectId } from 'mongodb'
+import type { TextAuditServiceOptions, TextAuditServiceProvider } from 'src/utils/textAudit'
 
 export enum Status {
   Normal = 0,
@@ -19,6 +20,7 @@ export class UserInfo {
   verifyTime?: string
   avatar?: string
   description?: string
+  updateTime?: string
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -26,6 +28,7 @@ export class UserInfo {
     this.status = Status.PreVerify
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
+    this.updateTime = new Date().toLocaleString()
   }
 }
 
@@ -104,10 +107,12 @@ export class ChatUsage {
     this.roomId = roomId
     this.chatId = chatId
     this.messageId = messageId
-    this.promptTokens = usage.prompt_tokens
-    this.completionTokens = usage.completion_tokens
-    this.totalTokens = usage.total_tokens
-    this.estimated = usage.estimated
+    if (usage) {
+      this.promptTokens = usage.prompt_tokens
+      this.completionTokens = usage.completion_tokens
+      this.totalTokens = usage.total_tokens
+      this.estimated = usage.estimated
+    }
     this.dateTime = new Date().getTime()
   }
 }
@@ -127,6 +132,7 @@ export class Config {
     public httpsProxy?: string,
     public siteConfig?: SiteConfig,
     public mailConfig?: MailConfig,
+    public auditConfig?: AuditConfig,
   ) { }
 }
 
@@ -150,4 +156,22 @@ export class MailConfig {
     public smtpUserName: string,
     public smtpPassword: string,
   ) { }
+}
+
+export class AuditConfig {
+  constructor(
+    public enabled: boolean,
+    public provider: TextAuditServiceProvider,
+    public options: TextAuditServiceOptions,
+    public textType: TextAudioType,
+    public customizeEnabled: boolean,
+    public sensitiveWords: string,
+  ) { }
+}
+
+export enum TextAudioType {
+  None = 0,
+  Request = 1 << 0, // 二进制 01
+  Response = 1 << 1, // 二进制 10
+  All = Request | Response, // 二进制 11
 }

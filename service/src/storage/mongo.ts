@@ -27,7 +27,7 @@ export async function insertChat(uuid: number, text: string, roomId: number, opt
 }
 
 export async function getChat(roomId: number, uuid: number) {
-  return await chatCol.findOne({ roomId, uuid })
+  return await chatCol.findOne({ roomId, uuid }) as ChatInfo
 }
 
 export async function updateChat(chatId: string, response: string, messageId: string, usage: UsageResponse, previousResponse?: []) {
@@ -36,10 +36,10 @@ export async function updateChat(chatId: string, response: string, messageId: st
     $set: {
       'response': response,
       'options.messageId': messageId,
-      'options.prompt_tokens': usage.prompt_tokens,
-      'options.completion_tokens': usage.completion_tokens,
-      'options.total_tokens': usage.total_tokens,
-      'options.estimated': usage.estimated,
+      'options.prompt_tokens': usage?.prompt_tokens,
+      'options.completion_tokens': usage?.completion_tokens,
+      'options.total_tokens': usage?.total_tokens,
+      'options.estimated': usage?.estimated,
     },
   }
 
@@ -157,6 +157,12 @@ export async function createUser(email: string, password: string): Promise<UserI
 export async function updateUserInfo(userId: string, user: UserInfo) {
   const result = userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
+  return result
+}
+
+export async function updateUserPassword(userId: string, password: string) {
+  const result = userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { password, updateTime: new Date().toLocaleString() } })
   return result
 }
 

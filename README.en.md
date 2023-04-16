@@ -233,7 +233,7 @@ services:
       # reverse proxy, optional
       API_REVERSE_PROXY: xxx
       # timeout, in milliseconds, optional
-      TIMEOUT_MS: 60000
+      TIMEOUT_MS: 600000
       # socks proxy, optional, effective with SOCKS_PROXY_PORT
       SOCKS_PROXY_HOST: xxxx
       # socks proxy port, optional, effective with SOCKS_PROXY_HOST
@@ -266,6 +266,13 @@ services:
       SMTP_TSL: true
       SMTP_USERNAME: noreply@examile.com
       SMTP_PASSWORD: xxx
+      # Enable sensitive word review, because the response result is streaming, so there is currently no review.
+      AUDIT_ENABLED: false
+      # https://ai.baidu.com/ai-doc/ANTIPORN/Vk3h6xaga
+      AUDIT_PROVIDER: baidu
+      AUDIT_API_KEY: xxx
+      AUDIT_API_SECRET: xxx
+      AUDIT_TEXT_LABEL: xxx
     links:
       - database
 
