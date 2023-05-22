@@ -62,6 +62,9 @@ export default {
     usagePrompt: 'Prompt',
     usageResponse: 'Response',
     usageTotal: 'Total token cost',
+    deleteUser: 'Delete User',
+    deleteUserConfirm: 'Are you sure to delete this user?',
+    verifiedUser: 'Verified User',
   },
   setting: {
     setting: 'Setting',
@@ -108,7 +111,6 @@ export default {
     registerMails: 'Register Mails',
     apiBaseUrl: 'Api Base Url',
     apiModel: 'Api Model',
-    chatModel: 'Chat Model',
     accessToken: 'Access Token',
     loginEnabled: 'Login Enabled',
     loginSalt: 'Login Salt',
@@ -125,6 +127,7 @@ export default {
     auditCustomizeEnabled: 'Customize',
     auditCustomizeWords: 'Sensitive Words',
     accessTokenExpiredTime: 'Expired Time',
+    userConfig: 'Users',
   },
   store: {
     siderButton: 'Prompt Store',

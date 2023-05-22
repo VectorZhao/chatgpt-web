@@ -62,6 +62,9 @@ export default {
     usagePrompt: '질문',
     usageResponse: '답변',
     usageTotal: '총 소비 token',
+    deleteUser: 'Delete User',
+    deleteUserConfirm: 'Are you sure to delete this user?',
+    verifiedUser: 'Verified User',
   },
   setting: {
     setting: '설정',
@@ -106,7 +109,6 @@ export default {
     registerMails: '메일 등록',
     apiBaseUrl: 'API 베이스 URL',
     apiModel: '인터페이스 유형',
-    chatModel: '모델',
     accessToken: '액세스 토큰',
     loginEnabled: '로그인 활성화',
     loginSalt: '로그인 정보 암호화 Salt',
@@ -123,6 +125,7 @@ export default {
     auditCustomizeEnabled: '맞춤화하다',
     auditCustomizeWords: '단어 맞춤설정',
     accessTokenExpiredTime: '만료된 시간',
+    userConfig: 'Users',
   },
   store: {
     siderButton: '프롬프트 스토어',

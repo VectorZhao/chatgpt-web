@@ -62,6 +62,9 @@ export default {
     usagePrompt: '提問',
     usageResponse: '回復',
     usageTotal: '總消耗 token',
+    deleteUser: '删除用户',
+    deleteUserConfirm: '你确定要删除这个用户吗?',
+    verifiedUser: '通过验证',
   },
   setting: {
     setting: '設定',
@@ -108,7 +111,6 @@ export default {
     registerMails: '邮箱后缀',
     apiBaseUrl: '接口地址',
     apiModel: '接口类型',
-    chatModel: '模型',
     accessToken: 'Access Token',
     loginEnabled: '注册登录',
     loginSalt: '登录混淆盐',
@@ -125,6 +127,7 @@ export default {
     auditCustomizeEnabled: '自定义',
     auditCustomizeWords: '敏感词',
     accessTokenExpiredTime: '过期时间',
+    userConfig: '用户管理',
   },
   store: {
     siderButton: '提示詞商店',
